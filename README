@@ -1,0 +1,19 @@
+Installation and Usage Guide
+This is the guide to set up the necessary libraries for the project. To use this project, you need to add the following libraries to the lib folder of your project.
+
+Required Libraries
+MySQL Connector/J 8.0.32
+
+This library is necessary to connect to the MySQL database.
+Download MySQL Connector/J from the official site: MySQL Connector/J
+After downloading, add the mysql-connector-java-8.0.32.jar file to the lib folder of your project.
+JSTL 1.2
+
+JSTL (JavaServer Pages Standard Tag Library) provides useful tags for handling JSP views.
+Download JSTL 1.2 from the official site: JSTL 1.2
+After downloading, add the jstl-1.2.jar file to the lib folder of your project.
+Servlet API 3.1
+
+The Servlet API provides classes and methods to develop web applications based on Java Servlets.
+Download Servlet API 3.1 from the official site: Servlet API 3.1
+After downloading, add the javax.servlet-api-3.1.0.jar file to the lib folder of your project.
