@@ -1,0 +1,34 @@
+# Ignore Eclipse project files
+.classpath
+.project
+.settings/
+
+# Ignore Maven target directory
+target/
+
+# Ignore log files
+*.log
+
+# Ignore OS generated files (macOS, Windows)
+.DS_Store
+Thumbs.db
+
+# Ignore IntelliJ IDEA project files (if applicable)
+.idea/
+
+# Ignore environment files
+.env
+
+# Ignore output and input files that are not part of the source code
+input.txt
+output_translated.txt
+
+# Ignore compiled Java class files
+*.class
+
+# Ignore Maven dependencies if using local repository
+mvn-repo/
+
+# Ignore generated files or files that shouldn't be committed
+*.war
+*.bak

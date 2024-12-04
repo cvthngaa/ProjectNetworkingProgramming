@@ -17,3 +17,20 @@ Servlet API 3.1
 The Servlet API provides classes and methods to develop web applications based on Java Servlets.
 Download Servlet API 3.1 from the official site: Servlet API 3.1
 After downloading, add the javax.servlet-api-3.1.0.jar file to the lib folder of your project.
+
+
+
+Add library 
+**Đảm bảo các thư viện này đã được đưa vào thư mục `WEB-INF/lib/`.**
+2. **Cài đặt Maven phụ thuộc (nếu bạn sử dụng Maven):**
+   ```xml
+   <dependency>
+       <groupId>com.fasterxml.jackson.core</groupId>
+       <artifactId>jackson-databind</artifactId>
+       <version>2.13.3</version>
+   </dependency>
+   <dependency>
+       <groupId>com.fasterxml.jackson.core</groupId>
+       <artifactId>jackson-annotations</artifactId>
+       <version>2.13.3</version>
+   </dependency>

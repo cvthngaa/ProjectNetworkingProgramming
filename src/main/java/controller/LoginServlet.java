@@ -46,9 +46,14 @@ public class LoginServlet extends HttpServlet {
 	        String password = request.getParameter("password");
 	        UserDao userDao = new UserDao();
 	        List<User> users = userDao.getAllUser();
-	        Optional<User> validUser = users.stream()
-	                .filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password))
-	                .findFirst();
+	        Optional<User> validUser = Optional.empty();
+
+	        for (User user : users) {
+	            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+	                validUser = Optional.of(user); 
+	                break;
+	            }
+	        }
 	        if (validUser.isPresent()) {
 	            session.setAttribute("user", validUser.get());
 	            response.sendRedirect("home.jsp"); 
