@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -15,82 +19,110 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import model.Task;
 import model.User;
 import repository.TaskDao;
 import repository.UserDao;
 
-/**
- * Servlet implementation class HandleDataServlet
- */
 @WebServlet("/upload")
 @MultipartConfig
 public class HandleDataServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public HandleDataServlet() {
-        super();
+    private static final BlockingQueue<Task> taskQueue = new LinkedBlockingQueue<>();
+    private static final List<Task> completedTasks = new ArrayList<>();
+
+    static {
+        Thread workerThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Task task = taskQueue.take();
+                    processTask(task); 
+                    synchronized (completedTasks) {
+                        completedTasks.add(task); 
+                        completedTasks.notifyAll();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+        workerThread.setDaemon(true);
+        workerThread.start();
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().append("Served at: ").append(request.getContextPath());
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
-        String user = (String) request.getParameter("user");
-        String functionName = request.getParameter("function");
-        String data = request.getParameter("data");
-        String sourceLanguage = request.getParameter("sourceLanguage");
-        String targetLanguage = request.getParameter("targetLanguage");
+    String username = request.getParameter("user");
 
-        System.out.println("User: " + user);
-        System.out.println("Function: " + functionName);
-        System.out.println("Data: " + data);
-        System.out.println("Source Language: " + sourceLanguage);
-        System.out.println("Target Language: " + targetLanguage);
+    if (username == null) {
+        response.getWriter().println("Missing parameters.");
+        return;
+    }
 
-        if (sourceLanguage == null || targetLanguage == null) {
-            response.getWriter().println("Source or Target language is missing.");
-            return;
-        }
+    User user = UserDao.getUserByName(username);
+    if (user == null) {
+        response.getWriter().println("User not found.");
+        return;
+    }
 
-        Part filePart = request.getPart("file");
-        File tempFile = File.createTempFile("uploaded-", ".txt");
-        try (InputStream fileContent = filePart.getInputStream();
-             FileOutputStream fos = new FileOutputStream(tempFile)) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = fileContent.read(buffer)) != -1) {
-                fos.write(buffer, 0, bytesRead);
+    List<Task> tasks = new ArrayList<>();
+    int fileCount = Integer.parseInt(request.getParameter("fileCount"));
+    System.out.println("fileCount: " + fileCount);
+
+    for (Part part : request.getParts()) {
+        if (part.getName().startsWith("file-")) { 
+            String sourceLanguage = request.getParameter("sourceLanguage-" + part.getName().substring(5)); 
+            String targetLanguage = request.getParameter("targetLanguage-" + part.getName().substring(5)); 
+
+            if (sourceLanguage != null && targetLanguage != null) {
+                File tempFile = File.createTempFile("uploaded-", ".txt");
+                try (InputStream fileContent = part.getInputStream();
+                     FileOutputStream fos = new FileOutputStream(tempFile)) {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = fileContent.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
+                    }
+                }
+
+                String text = new String(Files.readAllBytes(tempFile.toPath()), StandardCharsets.UTF_8);
+                Task task = new Task(user.getId(), text, sourceLanguage, targetLanguage, "", "PENDING");
+                tasks.add(task);
+                taskQueue.offer(task); 
             }
         }
+    }
 
-        String text = new String(Files.readAllBytes(tempFile.toPath()), StandardCharsets.UTF_8);
-        System.out.println("File content: " + text);
+    synchronized (completedTasks) {
+        while (completedTasks.size() < tasks.size()) {
+            try {
+                completedTasks.wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+    }
 
-        String translatedText = "";
+    request.getSession().setAttribute("tasks", new ArrayList<>(completedTasks));
+    completedTasks.clear();
+
+    response.sendRedirect("result.jsp");
+}
+
+
+    private static void processTask(Task task) {
         try {
-            translatedText = Translator.translate(sourceLanguage, targetLanguage, text);
-            System.out.println("File Translate : " + translatedText);
+            String translatedText = Translator.translate(task.getSourceLanguage(), task.getTargetLanguage(), task.getOriginalText());
+            task.setResult(translatedText);
+            task.setStatus("COMPLETED");
+
+            TaskDao.InsertTask(task.getUserId(), task.getOriginalText(), task.getSourceLanguage(), task.getTargetLanguage(), task.getStatus(), task.getResult());
         } catch (Exception e) {
             e.printStackTrace();
+            task.setStatus("FAILED");
+            TaskDao.InsertTask(task.getUserId(), task.getOriginalText(), task.getSourceLanguage(), task.getTargetLanguage(), task.getStatus(), "");
         }
-        if (user != null) {
-        	 User dataUser = UserDao.getUserByName(user);
-             TaskDao.InsertTask(dataUser.getId(), text, "COMPLETED", translatedText);
-        }
-        System.out.println("User empty!");
-        // Translator.WriteToFile(translatedText);
-        
-        System.out.println("COMPLETED");
     }
 }

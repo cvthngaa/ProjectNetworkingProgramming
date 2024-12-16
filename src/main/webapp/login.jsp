@@ -31,11 +31,8 @@
                 <div class="password">
                     <i class="fa-solid fa-lock"></i>
                     <input type="password" name="password" placeholder="Mật khẩu">
-                </div>
-    
-                <p class="forget"><a href = "forgotPass.jsp" style="color: red;"> Quên mật khẩu? </a></p>
-    
-                <button type="submit">Đăng nhập</button>
+                </div>    
+                <br> <button type="submit">Đăng nhập</button>
         
             </form>
     

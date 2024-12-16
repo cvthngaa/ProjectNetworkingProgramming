@@ -1,0 +1,110 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.register_form {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 900px;
+    max-width: 90%;
+}
+
+.register_form .left {
+    flex: 2;
+    background: url('https://i.pinimg.com/736x/20/44/8f/20448fb4c6c278be29c79695fbd02ff7.jpg') center/cover no-repeat;
+}
+
+.register_form .right {
+    flex: 1.5;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.register_form h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.register_form form p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.register_form form .user, .email, .password {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f9;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+.register_form form .user i, .email i, .password i {
+    color: #888;
+    margin-right: 10px;
+}
+
+.register_form form input {
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    font-size: 1rem;
+}
+
+.register_form form button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(to right,#c72092 , #6c14d0);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register_form form button:hover {
+    transform: translateX(6px);
+}
+
+.register_form p {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.register_form p a {
+    color: linear-gradient(to right,#c72092 , #6c14d0);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register_form p a:hover {
+    text-decoration: underline;
+}
+
+.message {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: left;
+}

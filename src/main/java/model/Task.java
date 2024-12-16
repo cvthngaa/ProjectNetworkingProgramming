@@ -1,64 +1,73 @@
 package model;
 
 public class Task {
-	  private int id;
-	  private int userId;
-	  private String inputData;
-	  private String status;
-	  private String result;
-	  
-	public Task(int id, int userId, String inputData, String status, String result) {
-		super();
-		this.id = id;
-		this.userId = userId;
-		this.inputData = inputData;
-		this.status = status;
-		this.result = result;
-	}
+    private int userId;
+    private String originalText;
+    private String sourceLanguage;
+    private String targetLanguage;
+    private String status;
+    private String result;
 
-	public int getId() {
-		return id;
-	}
+    public Task(int userId, String originalText, String sourceLanguage, String targetLanguage, String status, String result) {
+        this.userId = userId;
+        this.originalText = originalText;
+        this.sourceLanguage = sourceLanguage;
+        this.targetLanguage = targetLanguage;
+        this.status = status;
+        this.result = result;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getUserId() {
+        return userId;
+    }
 
-	public int getUserId() {
-		return userId;
-	}
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+    public String getOriginalText() {
+        return originalText;
+    }
 
-	public String getInputData() {
-		return inputData;
-	}
+    public void setOriginalText(String originalText) {
+        this.originalText = originalText;
+    }
 
-	public void setInputData(String inputData) {
-		this.inputData = inputData;
-	}
+    public String getSourceLanguage() {
+        return sourceLanguage;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public void setSourceLanguage(String sourceLanguage) {
+        this.sourceLanguage = sourceLanguage;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public String getTargetLanguage() {
+        return targetLanguage;
+    }
 
-	public String getResult() {
-		return result;
-	}
+    public void setTargetLanguage(String targetLanguage) {
+        this.targetLanguage = targetLanguage;
+    }
 
-	public void setResult(String result) {
-		this.result = result;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	@Override
-	public String toString() {
-		return "Task [id=" + id + ", userId=" + userId + ", inputData=" + inputData + ", status=" + status + ", result="
-				+ result + "]";
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    @Override
+    public String toString() {
+        return "Task [userId=" + userId + ", originalText=" + originalText + ", sourceLanguage=" + sourceLanguage 
+                + ", targetLanguage=" + targetLanguage + ", status=" + status + ", result=" + result + "]";
+    }
 }

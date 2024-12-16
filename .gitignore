@@ -32,3 +32,4 @@ mvn-repo/
 # Ignore generated files or files that shouldn't be committed
 *.war
 *.bak
+/dist/

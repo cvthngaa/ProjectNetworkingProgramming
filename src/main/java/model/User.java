@@ -15,6 +15,10 @@ public class User {
 	    this.password = password;
 	    this.createdAt = timestamp;
 	}
+	public User( String username, String password) {
+	    this.username = username;
+	    this.password = password;
+	}
 	
 	public int getId() {
 	    return id;
